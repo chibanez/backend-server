@@ -1,0 +1,35 @@
+Propuesta: Actualizacion de Tecnologias en Desarrollos Web y Mobile
+
+La idea es tener la posibilidad de investigar nuevas tecnologías y aprender a utilizar las herramientas necesarias para implementarlas para los futuros desarrollos de aplicaciones Web y Mobile de SMSV.
+
+En un principio los temas a investigar serian las formas de generar aplicaciones PWA (Aplicaciones Web Progresivas) con frameworks Angular y/o Ionic utilizando como Back End servicios Web SOAP y/o REST implementados en nuestros servidores Websphere. 
+
+Para avanzar con estas metas necesitaríamos:
+
+	1) Permisos de administrador local para las maquinas de los desarrolladores: Se necesitan para instalar y configurar la herramientas a utilizar. En principio serian las siguientes:
+
+		- NodeJs
+		- Yarn
+		- Angular
+		- Ionic
+		- Http Server Local
+		- Websphere 9 o superior en maquinas locales
+
+	Obviamente el proceso de aprendizaje puede llevar a necesitar de estos permisos para poder descargar, instalar y configurar otras herramientas.
+
+	2) Acceso a Internet menos restringido: Además de los permisos actuales necesitaríamos la posibilidad de acceder a YouTube ya que hoy en día hay muchos cursos y material en ese formato que seria de mucha utilidad para acelerar el proceso de 		aprendizaje.
+
+Estos dos puntos serian suficientes para iniciar la configuración de los entornos de trabajo y realizar las primeras pruebas de desarrollo. Para mejorar proceso de aprendizaje seria conveniente también, en la medida de lo posible, actualizar las maquinas a un nivel acorde a lo necesario para implementar estas tecnologías y poder trabajar de manera cómoda y rápida. Tengamos en cuenta que estaríamos haciendo pruebas en ambientes locales donde convivirían servidores tanto de Front End como de Back End.
+
+
+Los beneficios para SMSV de implementar estas tecnologías serian:
+
+1 - Actualizar los estándares de desarrollo Web y Mobile de SMSV llevándolos al nivel de los que se utilizan actualmente en el mercado. (ej: el Home Banking del Banco BBVA Frances utiliza el framework Angular para su Front End y durante el curso de Seguridad Informática impartido esta semana el profesor nos presentó estas tecnologías como el futuro del desarrollo Web/Mobile)
+
+2 - Definir un marco de trabajo estandarizado para todas las aplicaciones Web/Mobile que permita el intercambio de desarrolladores entre ambos ambientes. Hoy por hoy las herramientas para desarrollar Mobile son muy distintas a las de desarrollo Web. Este punto permitiría tener un grupo de desarrolladores encargados de Web/Mobile en su conjunto y no tener ambas aplicaciones como tecnologías separadas, facilitando el intercambio de recursos entre las mismas.
+
+3 - Los frameworks Angular/Ionic permiten fácilmente generar librerías de componentes comunes entre aplicaciones Web y Mobile que permitirán mejorar mucho la reutilización de código y simplificar el desarrollo y el mantenimiento de las aplicaciones.
+
+4 - Las nuevas aplicaciones PWA (Aplicaciones Web Progresivas) son un híbrido entre las aplicaciones Web y Mobile tradicionales y tratan de tomar los mejores aspectos de cada una de ellas, todo desarrollando y manteniendo una aplicación que se desempeñe de manera eficiente en ambos ambientes y teniendo que mantener un solo código fuente. Es hacia donde va el desarrollo de aplicaciones de servicios, lo ultimo de lo ultimo, y estaría bueno que SMSV tuviera presencia en este tipo de aplicaciones. 
+La principal ventaja de la PWA es que los socios la podrían utilizar desde su celular teniendo una experiencia similar a la de la app Mobile actual, pero sin la necesidad de instalarla desde el app store (lo que hace mas fácil el proceso para utilizarla, no requiere espacio físico en el celular para instalarla y simplifica enormemente el proceso de actualización, que pasaría a ser prácticamente imperceptible para el asociado).
+Mas informacion PWA en http://www.redusers.com/noticias/que-es-una-pwa/
