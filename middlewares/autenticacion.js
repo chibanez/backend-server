@@ -27,4 +27,4 @@ exports.verificaToken = function(req, res, next) {
         //El next permite que siga la ejecucion
         next();
     });
-}
+};

@@ -1,15 +1,14 @@
 var express = require('express');
-var bcrypt = require('bcryptjs');
 var jwt = require('jsonwebtoken');
 
 var mdAutenticacion = require('../middlewares/autenticacion');
 
 var app = express();
 
-var Usuario = require('../models/usuario');
+var Hospital = require('../models/hospital');
 
 //================================================
-// Obtener todos los usuarios
+// Obtener todos los hospitales
 //================================================
 app.get('/', (req, res, next) => {
 
@@ -17,91 +16,86 @@ app.get('/', (req, res, next) => {
     var desde = req.query.desde || 0;
     desde = Number(desde);
 
-    Usuario.find({}, 'nombre email img role')
-        //Saltea los primeros "desde"
+    Hospital.find({})
         .skip(desde)
-        //Trae solo 5
         .limit(5)
+        // populate entiende la referencia a un objeto de otra coleccion y me carga sus datos
+        // en el 2do parametro le digo que campos del objeto quiero cargar
+        .populate('usuario', 'nombre email')
         .exec(
-            (err, usuarios) => {
+            (err, hospitalesDB) => {
 
                 if (err) {
                     return res.status(500).json({
                         ok: false,
-                        mensaje: 'Error en Base de Datos. Cargando usuarios',
+                        mensaje: 'Error en Base de Datos. Cargando hospitales',
                         errors: err
                     });
                 }
 
-                Usuario.count({}, (err, conteo) => {
+                Hospital.count({}, (err, conteo) => {
                     res.status(200).json({
                         ok: true,
-                        usuarios: usuarios,
+                        hospitales: hospitalesDB,
                         total: conteo
                     });
                 });
-
             });
 });
 
-
 //================================================
-// Actualizar usuario
+// Actualizar hospital
 //================================================
 app.put('/:id', [mdAutenticacion.verificaToken], (req, res) => {
 
     var id = req.params.id;
     var body = req.body;
 
-    Usuario.findById(id, (err, usuario) => {
+    Hospital.findById(id, (err, hospitalDB) => {
 
         if (err) {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error al buscar usuario',
+                mensaje: 'Error al buscar hospital',
                 errors: err
             });
         }
 
-        if (!usuario) {
+        if (!hospitalDB) {
             return res.status(400).json({
                 ok: false,
-                mensaje: 'El usuario con el id' + id + ' no existe',
-                errors: { message: 'No existe un usuario con ese id' }
+                mensaje: 'El hospital con el id' + id + ' no existe',
+                errors: { message: 'No existe un hospital con ese id' }
                 //El error lo devuelvo como un objeto
             });
         }
 
-        usuario.nombre = body.nombre;
-        usuario.email = body.email;
-        usuario.role = body.role;
+        hospitalDB.nombre = body.nombre;
+        //En el autenticador del token lo decodeo y obtengo el id del usuario. Lo pongo en el req para poder utilizar la info del token aca
+        hospitalDB.usuario = req.usuario._id;
 
-        usuario.save((err, usuarioGuardado) => {
+        hospitalDB.save((err, hospitalGuardado) => {
 
             if (err) {
                 //Mando error 400 si falla por mal validacion de datos
                 return res.status(400).json({
                     ok: false,
-                    mensaje: 'Error en Base de Datos. Guardando cambios de usuario',
+                    mensaje: 'Error en Base de Datos. Guardando cambios de hospital',
                     errors: err
                 });
             }
 
-            //Aca puedo blanquear los datos que no quiero devolver
-            usuarioGuardado.password = ':)';
-
             res.status(200).json({
                 ok: true,
-                usuario: usuarioGuardado
+                hospital: hospitalGuardado
             });
 
         });
     });
 });
 
-
 //================================================
-// Crear un nuevo usuario
+// Crear un nuevo hospital
 //================================================
 //Utilizo el middleware para que valide el token en esta llamada (mdAutenticacion.verificaToken)
 //El middleware puede ir en [] ya que la funcion puede ejecutar un array de middlewares uno atras del otro
@@ -110,73 +104,68 @@ app.post('/', [mdAutenticacion.verificaToken], (req, res) => {
     // Esto solo funciona si tengo configurado el body parser
     var body = req.body;
 
-    // Para encriptar la clave uso bcrypt (https://github.com/dcodeIO/bcrypt.js)
-    // npm install bcryptjs --save
-    var usuario = new Usuario({
+    var hospital = new Hospital({
         nombre: body.nombre,
-        email: body.email,
-        password: bcrypt.hashSync(body.password, 10),
         img: body.img,
-        role: body.role
+        //En el autenticador del token lo decodeo y obtengo el id del usuario. Lo pongo en el req para poder utilizar la info del token aca
+        usuario: req.usuario._id
     });
 
 
-    usuario.save((err, usuarioGuardado) => {
+    hospital.save((err, hospitalCreado) => {
 
         if (err) {
 
             //Mando error 400 si falla por mal validacion de datos
             return res.status(400).json({
                 ok: false,
-                mensaje: 'Error en Base de Datos. Creando usuario',
+                mensaje: 'Error en Base de Datos. Creando hospital',
                 errors: err
             });
         }
 
         res.status(201).json({
             ok: true,
-            usuario: usuarioGuardado,
-            usuarioToken: req.usuario
+            hospital: hospitalCreado
         });
 
     });
 });
 
 //================================================
-// Eliminar usuario
+// Eliminar hospital
 //================================================
 
 app.delete('/:id', [mdAutenticacion.verificaToken], (req, res) => {
 
     var id = req.params.id;
 
-    Usuario.findByIdAndRemove(id, (err, usuarioBorrado) => {
+    Hospital.findByIdAndRemove(id, (err, hospitalBorrado) => {
 
         if (err) {
 
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error en Base de Datos. Borrando usuario',
+                mensaje: 'Error en Base de Datos. Borrando hospital',
                 errors: err
             });
         }
 
-        if (!usuarioBorrado) {
+        if (!hospitalBorrado) {
 
             return res.status(400).json({
                 ok: false,
-                mensaje: 'No existe un usuario con ese id',
-                errors: { message: 'No existe un usuario con ese id' }
+                mensaje: 'No existe un hospital con ese id',
+                errors: { message: 'No existe un hospital con ese id' }
             });
         }
 
         res.status(200).json({
             ok: true,
-            usuario: usuarioBorrado
+            hospital: hospitalBorrado
         });
 
     });
 });
-
 
 module.exports = app;
