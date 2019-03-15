@@ -17,7 +17,7 @@ app.get('/', (req, res, next) => {
     var desde = req.query.desde || 0;
     desde = Number(desde);
 
-    Usuario.find({}, 'nombre email img role')
+    Usuario.find({}, 'nombre email img role google')
         //Saltea los primeros "desde"
         .skip(desde)
         //Trae solo 5
@@ -48,6 +48,8 @@ app.get('/', (req, res, next) => {
 //================================================
 // Actualizar usuario
 //================================================
+//Utilizo el middleware para que valide el token en esta llamada (mdAutenticacion.verificaToken)
+//El middleware puede ir en [] ya que la funcion puede ejecutar un array de middlewares uno atras del otro
 app.put('/:id', [mdAutenticacion.verificaToken], (req, res) => {
 
     var id = req.params.id;
@@ -103,9 +105,7 @@ app.put('/:id', [mdAutenticacion.verificaToken], (req, res) => {
 //================================================
 // Crear un nuevo usuario
 //================================================
-//Utilizo el middleware para que valide el token en esta llamada (mdAutenticacion.verificaToken)
-//El middleware puede ir en [] ya que la funcion puede ejecutar un array de middlewares uno atras del otro
-app.post('/', [mdAutenticacion.verificaToken], (req, res) => {
+app.post('/', (req, res) => {
 
     // Esto solo funciona si tengo configurado el body parser
     var body = req.body;

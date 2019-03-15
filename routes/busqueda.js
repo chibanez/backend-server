@@ -117,7 +117,7 @@ function buscarUsuarios(busqueda, regexp) {
     return new Promise((resolve, reject) => {
 
         //Para buscar filtrando por mas de un campo
-        Usuario.find({}, 'nombre email role').or([{ 'nombre': regexp }, { 'email': regexp }])
+        Usuario.find({}, 'nombre email role google').or([{ 'nombre': regexp }, { 'email': regexp }])
             .exec((err, usuarios) => {
 
                 if (err) {

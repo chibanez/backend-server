@@ -44,6 +44,43 @@ app.get('/', (req, res, next) => {
 });
 
 //================================================
+// Obtener un hospital por id
+//================================================
+app.get('/:id', (req, res, next) => {
+
+    var id = req.params.id;
+
+    Hospital.findById(id)
+        // populate entiende la referencia a un objeto de otra coleccion y me carga sus datos
+        // en el 2do parametro le digo que campos del objeto quiero cargar
+        .populate('usuario', 'nombre img email')
+        .exec(
+            (err, hospitalDB) => {
+
+                if (err) {
+                    return res.status(500).json({
+                        ok: false,
+                        mensaje: 'Error en Base de Datos. Cargando hospital',
+                        errors: err
+                    });
+                }
+
+                if (!hospitalDB) {
+                    return res.status(400).json({
+                        ok: false,
+                        mensaje: 'El hospital con id ' + id + ' no existe.',
+                        errors: { message: 'No existe un hospital con ese ID' }
+                    });
+                }
+
+                res.status(200).json({
+                    ok: true,
+                    hospital: hospitalDB
+                });
+            });
+});
+
+//================================================
 // Actualizar hospital
 //================================================
 app.put('/:id', [mdAutenticacion.verificaToken], (req, res) => {

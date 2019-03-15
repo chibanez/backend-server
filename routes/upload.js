@@ -42,7 +42,7 @@ app.put('/:tipo/:id', (req, res, next) => {
     var extensionArchivo = nombreCortado[nombreCortado.length - 1];
 
     // Extensiones permitidas
-    var extensionesValidas = ['png', 'jpg', 'gif', 'jpeg'];
+    var extensionesValidas = ['png', 'jpg', 'gif', 'jpeg', 'JPG'];
     if (extensionesValidas.indexOf(extensionArchivo) < 0) {
         return res.status(400).json({
             ok: false,
@@ -120,7 +120,7 @@ function subirPorTipo(tipo, id, nombreArchivo, res) {
 
             // Si existe la imagen anterior la borro. Asi me queda solo la ultima
             var pathViejo = './uploads/medicos/' + medicoDB.img;
-            if (fs.existsSync(pathViejo)) {
+            if (fs.existsSync(pathViejo) && medicoDB.img.length > 0) {
                 fs.unlinkSync(pathViejo);
             }
 

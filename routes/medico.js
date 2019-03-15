@@ -42,6 +42,44 @@ app.get('/', (req, res, next) => {
 });
 
 //================================================
+// Obtener un medico por id
+//================================================
+app.get('/:id', (req, res, next) => {
+
+    var id = req.params.id;
+
+    Medico.findById(id)
+        // populate entiende la referencia a un objeto de otra coleccion y me carga sus datos
+        // en el 2do parametro le digo que campos del objeto quiero cargar
+        .populate('usuario', 'nombre img email')
+        .populate('hospital')
+        .exec(
+            (err, medicoDB) => {
+
+                if (err) {
+                    return res.status(500).json({
+                        ok: false,
+                        mensaje: 'Error en Base de Datos. Cargando medico',
+                        errors: err
+                    });
+                }
+
+                if (!medicoDB) {
+                    return res.status(400).json({
+                        ok: false,
+                        mensaje: 'El medico con id ' + id + ' no existe.',
+                        errors: { message: 'No existe un medico con ese ID' }
+                    });
+                }
+
+                res.status(200).json({
+                    ok: true,
+                    medico: medicoDB
+                });
+            });
+});
+
+//================================================
 // Actualizar medico
 //================================================
 app.put('/:id', [mdAutenticacion.verificaToken], (req, res) => {
@@ -73,6 +111,9 @@ app.put('/:id', [mdAutenticacion.verificaToken], (req, res) => {
         }
         if (body.hospital) {
             medicoDB.hospital = body.hospital;
+        }
+        if (body.img) {
+            medicoDB.img = body.img;
         }
 
         //En el autenticador del token lo decodeo y obtengo el id del usuario. Lo pongo en el req para poder utilizar la info del token aca
