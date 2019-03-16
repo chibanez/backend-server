@@ -50,7 +50,7 @@ app.get('/', (req, res, next) => {
 //================================================
 //Utilizo el middleware para que valide el token en esta llamada (mdAutenticacion.verificaToken)
 //El middleware puede ir en [] ya que la funcion puede ejecutar un array de middlewares uno atras del otro
-app.put('/:id', [mdAutenticacion.verificaToken], (req, res) => {
+app.put('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaAdminOMismoUsuario], (req, res) => {
 
     var id = req.params.id;
     var body = req.body;
@@ -146,7 +146,7 @@ app.post('/', (req, res) => {
 // Eliminar usuario
 //================================================
 
-app.delete('/:id', [mdAutenticacion.verificaToken], (req, res) => {
+app.delete('/:id', [mdAutenticacion.verificaToken, mdAutenticacion.verificaAdmin], (req, res) => {
 
     var id = req.params.id;
 

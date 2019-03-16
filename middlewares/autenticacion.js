@@ -28,3 +28,46 @@ exports.verificaToken = function(req, res, next) {
         next();
     });
 };
+
+//================================================
+// Verificar Admin
+//================================================
+
+exports.verificaAdmin = function(req, res, next) {
+
+    var usuario = req.usuario;
+
+    if (usuario.role === 'ADMIN_ROLE') {
+        next();
+        return;
+    } else {
+        return res.status(401).json({
+            ok: false,
+            mensaje: 'Funcion solo para administradores',
+            errors: { message: 'Funcion solo para administradores' }
+        });
+    }
+};
+
+//================================================
+// Verificar Admin o Mismo Usuario
+//================================================
+
+exports.verificaAdminOMismoUsuario = function(req, res, next) {
+
+    var usuario = req.usuario;
+    // Toma el id que envio por parametro a la funcion
+    // OJO que la funcion que lo use reciba un parametro
+    var id = req.params.id;
+
+    if (usuario.role === 'ADMIN_ROLE' || id === usuario._id) {
+        next();
+        return;
+    } else {
+        return res.status(401).json({
+            ok: false,
+            mensaje: 'Funcion solo para administradores o el mismo usuario',
+            errors: { message: 'Funcion solo para administradores' }
+        });
+    }
+};
